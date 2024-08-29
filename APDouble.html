@@ -96,14 +96,14 @@
         return text;
     }
 
-    // Define text lines and positions with reduced vertical spacing and centered on bars
+    // Define text lines and positions based on the image reference
     var lines = [
-        { text: "Welcome to", color: "#800000", y: 110 },
-        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 190 },
-        { text: "&", color: "#800000", y: 270 },
-        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 350 },
-        { text: "2024-2025", color: "#800000", y: 430 },
-        { text: "Mr. Danese", color: "#800000", y: 510 }
+        { text: "Welcome to", color: "#800000", y: 120 },
+        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 220 },
+        { text: "&", color: "#800000", y: 320 },
+        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 420 },
+        { text: "2024-2025", color: "#800000", y: 520 },
+        { text: "Mr. Danese", color: "#800000", y: 620 }
     ];
 
     // Function to position words with reduced spacing between specific pairs
@@ -112,8 +112,8 @@
         words.forEach(function(word, i) {
             // Reduce spacing between "AP" and "Physics" and between "Physics" and "C"
             var wordSpacing = 150;
-            if (word === "AP" || word === "Physics" && (words[i + 1] === "C" || words[i + 1] === "Electricity")) {
-                wordSpacing = 100;  // Reduced spacing
+            if (word === "AP" || word === "Physics" || word === "C") {
+                wordSpacing = 80;  // Significantly reduced spacing
             }
 
             var wordBody = createWord(word, xOffset, lineY, color);
@@ -125,7 +125,7 @@
     // Create and add each line of words with appropriate spacing
     lines.forEach(function(line, index) {
         var words = line.text.split(' ');  // Split the line into individual words
-        var startX = 600 - (words.length * 75); // Adjust starting x position to reduce spacing
+        var startX = 600 - (words.length * 60); // Adjust starting x position to reduce spacing
 
         // Create and add a thinner bar for this line
         var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
