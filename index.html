@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matter.js Bouncing Interactive Letters</title>
+    <title>Matter.js Bouncing Interactive Letters with Walls</title>
     <style>
         body {
             margin: 0;
@@ -52,9 +52,13 @@
     var runner = Runner.create();
     Runner.run(runner, engine);
 
-    // Create ground
+    // Create boundaries (walls and ceiling)
     var ground = Bodies.rectangle(400, 590, 810, 60, { isStatic: true, render: { fillStyle: '#060a19' } });
-    Composite.add(engine.world, [ground]);
+    var leftWall = Bodies.rectangle(10, 300, 20, 600, { isStatic: true, render: { fillStyle: '#060a19' } });
+    var rightWall = Bodies.rectangle(790, 300, 20, 600, { isStatic: true, render: { fillStyle: '#060a19' } });
+    var ceiling = Bodies.rectangle(400, 10, 810, 20, { isStatic: true, render: { fillStyle: '#060a19' } });
+
+    Composite.add(engine.world, [ground, leftWall, rightWall, ceiling]);
 
     // Function to create a random color
     function getRandomColor() {
