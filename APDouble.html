@@ -67,68 +67,43 @@
         var family = "Arial, sans-serif";  // Arial font
         context.font = "bold " + size + "px " + family;  // Bold style
 
-        var textWidth = context.measureText(word).width;
-        var textHeight = size;
+        // Increase canvas size for higher resolution
+        var padding = 10;
+        var textWidth = context.measureText(word).width + padding * 2;
+        var textHeight = size + padding * 2;
+        canvas.width = textWidth;
+        canvas.height = textHeight;
 
-        var text = Bodies.rectangle(x, y, textWidth, textHeight, {
+        context.font = "bold " + size + "px " + family;
+        context.fillStyle = color;
+        context.textBaseline = "top";
+        context.fillText(word, padding, padding);
+
+        var texture = canvas.toDataURL("image/png");
+
+        var text = Bodies.rectangle(x, y, textWidth - padding * 2, textHeight - padding * 2, {
             isStatic: false,
             restitution: 0.5,  // Bounciness
             render: {
                 sprite: {
-                    texture: '',
+                    texture: texture,
                     xScale: 1,
                     yScale: 1
-                },
-                fillStyle: color
+                }
             }
         });
-
-        // Add custom label to the text body
-        text.render.text = {
-            content: word,
-            color: color,
-            size: size,
-            family: family
-        };
-
-        // Update the texture of the word
-        Matter.Events.on(engine, "afterUpdate", function() {
-            text.render.sprite.texture = createTextTexture(text.render.text.content, text.render.text.color, text.render.text.size, text.render.text.family);
-        });
-
-        // Resize the text body to match the size of the text texture
-        Matter.Body.setVertices(text, [
-            { x: -textWidth / 2, y: -textHeight / 2 },
-            { x: textWidth / 2, y: -textHeight / 2 },
-            { x: textWidth / 2, y: textHeight / 2 },
-            { x: -textWidth / 2, y: textHeight / 2 }
-        ]);
 
         return text;
     }
 
-    // Function to create a canvas with the text and return it as a data URL
-    function createTextTexture(text, color, size, family) {
-        var canvas = document.createElement("canvas");
-        var context = canvas.getContext("2d");
-        context.font = "bold " + size + "px " + family;
-        context.fillStyle = color;
-        canvas.width = context.measureText(text).width;
-        canvas.height = size;
-        context.font = "bold " + size + "px " + family;
-        context.fillStyle = color;
-        context.fillText(text, 0, size);
-        return canvas.toDataURL("image/png");
-    }
-
-    // Define text lines and positions with reduced vertical spacing
+    // Define text lines and positions with reduced vertical spacing and centered on bars
     var lines = [
-        { text: "Welcome to", color: "#800000", y: 100 },
-        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 180 },
-        { text: "&", color: "#800000", y: 260 },
-        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 340 },
-        { text: "2024-2025", color: "#800000", y: 420 },
-        { text: "Mr. Danese", color: "#800000", y: 500 }
+        { text: "Welcome to", color: "#800000", y: 110 },
+        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 190 },
+        { text: "&", color: "#800000", y: 270 },
+        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 350 },
+        { text: "2024-2025", color: "#800000", y: 430 },
+        { text: "Mr. Danese", color: "#800000", y: 510 }
     ];
 
     // Create and add each word as a separate entity, with thinner bars underneath
