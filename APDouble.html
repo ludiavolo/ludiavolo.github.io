@@ -132,6 +132,10 @@
             startX -= 50;  // Move line 3 slightly to the left
         }
 
+         if (line.text === "Mr. Danese") {
+            startX -= 10;  // Move line 5 slightly to the left
+        }
+
         // Create and add a thinner bar for this line
         var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
         Composite.add(engine.world, bar);
