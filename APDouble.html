@@ -63,9 +63,9 @@
     function createWord(word, x, y, color) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
-        var size = 48;  // Font size
-        var family = "Verdana, sans-serif";  // Change the font to Verdana
-        context.font = "bold " + size + "px " + family;
+        var size = 52;  // Slightly increased font size
+        var family = "Georgia, serif";  // Change the font to Georgia
+        context.font = size + "px " + family;  // Removed bold
 
         var textWidth = context.measureText(word).width;
         var textHeight = size;
@@ -111,24 +111,24 @@
     function createTextTexture(text, color, size, family) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
-        context.font = "bold " + size + "px " + family;
+        context.font = size + "px " + family;
         context.fillStyle = color;
         canvas.width = context.measureText(text).width;
         canvas.height = size;
-        context.font = "bold " + size + "px " + family;
+        context.font = size + "px " + family;
         context.fillStyle = color;
         context.fillText(text, 0, size);
         return canvas.toDataURL("image/png");
     }
 
-    // Define text lines and positions
+    // Define text lines and positions with reduced vertical spacing
     var lines = [
         { text: "Welcome to", color: "#800000", y: 100 },
-        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 250 },
-        { text: "&", color: "#800000", y: 400 },
-        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 550 },
-        { text: "2024-2025", color: "#800000", y: 700 },
-        { text: "Mr. Danese", color: "#800000", y: 850 }
+        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 180 },
+        { text: "&", color: "#800000", y: 260 },
+        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 340 },
+        { text: "2024-2025", color: "#800000", y: 420 },
+        { text: "Mr. Danese", color: "#800000", y: 500 }
     ];
 
     // Create and add each word as a separate entity, with bars underneath
@@ -172,4 +172,3 @@
 
 </body>
 </html>
-
