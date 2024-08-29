@@ -106,17 +106,17 @@
         { text: "Mr. Danese", color: "#800000", y: 620 }
     ];
 
-    // Function to position words with reduced spacing between specific pairs
-    function positionWords(words, startX, lineY, color) {
+    // Function to position words with adjusted spacing
+    function positionWords(words, startX, lineY, color, spacingAdjustments) {
         var xOffset = startX;
         words.forEach(function(word, i) {
             // Adjust spacing based on specific words
-            var wordSpacing = 140;
+            var wordSpacing = spacingAdjustments.default || 140;
 
-            if (word === "AP") {
-                wordSpacing = 160;  // Adjust spacing between "AP" and "Physics"
-            } else if (word === "Physics" || word === "C") {
-                wordSpacing = 120;  // Slightly reduced spacing for these words
+            if (word === "AP" && spacingAdjustments.apPhysics) {
+                wordSpacing = spacingAdjustments.apPhysics;
+            } else if (i < words.length - 1 && spacingAdjustments.increase) {
+                wordSpacing = spacingAdjustments.increase;
             }
 
             var wordBody = createWord(word, xOffset, lineY, color);
@@ -128,14 +128,25 @@
     // Create and add each line of words with appropriate spacing
     lines.forEach(function(line, index) {
         var words = line.text.split(' ');  // Split the line into individual words
-        var startX = line.text === "Welcome to" ? 630 : 600 - (words.length * 60); // Adjust startX for "Welcome to"
+
+        // Spacing adjustments per line
+        var spacingAdjustments = {};
+        if (line.text === "AP Physics C: Mechanics") {
+            spacingAdjustments.apPhysics = 120; // Reduced spacing between "AP" and "Physics"
+        } else if (line.text === "AP Physics C: Electricity and Magnetism!") {
+            spacingAdjustments.increase = 160; // Increased spacing on the fourth line
+        } else {
+            spacingAdjustments.default = 140;
+        }
+
+        var startX = line.text === "Welcome to" ? 600 : 600 - (words.length * 60); // Adjust startX for "Welcome to"
 
         // Create and add a thinner bar for this line
         var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
         Composite.add(engine.world, bar);
 
-        // Position words with reduced spacing between specific pairs
-        positionWords(words, startX, line.y, line.color);
+        // Position words with custom spacing
+        positionWords(words, startX, line.y, line.color, spacingAdjustments);
     });
 
     // Add mouse control to drag words
