@@ -134,15 +134,15 @@
     // Create and add each word as a separate entity, with bars underneath
     lines.forEach(function(line, index) {
         var words = line.text.split(' ');  // Split the line into individual words
-        var startX = 600 - (words.length * 150); // Adjust starting x position
+        var startX = 600 - (words.length * 100); // Adjust starting x position to reduce spacing
 
         // Create and add a bar for this line
         var bar = createBar(600, line.y + 60, 1000, 5); // Wide thin black bar under the words
         Composite.add(engine.world, bar);
 
-        // Create and add each word
+        // Create and add each word with reduced spacing
         words.forEach(function(word, i) {
-            var wordBody = createWord(word, startX + i * 300, line.y, line.color);
+            var wordBody = createWord(word, startX + i * 200, line.y, line.color);
             Composite.add(engine.world, wordBody);
         });
     });
