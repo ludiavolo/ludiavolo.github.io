@@ -63,9 +63,9 @@
     function createWord(word, x, y, color) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
-        var size = 52;  // Slightly increased font size
-        var family = "Georgia, serif";  // Change the font to Georgia
-        context.font = size + "px " + family;  // Removed bold
+        var size = 48;  // Font size
+        var family = "Arial, sans-serif";  // Arial font
+        context.font = "bold " + size + "px " + family;  // Bold style
 
         var textWidth = context.measureText(word).width;
         var textHeight = size;
@@ -111,11 +111,11 @@
     function createTextTexture(text, color, size, family) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
-        context.font = size + "px " + family;
+        context.font = "bold " + size + "px " + family;
         context.fillStyle = color;
         canvas.width = context.measureText(text).width;
         canvas.height = size;
-        context.font = size + "px " + family;
+        context.font = "bold " + size + "px " + family;
         context.fillStyle = color;
         context.fillText(text, 0, size);
         return canvas.toDataURL("image/png");
@@ -131,13 +131,13 @@
         { text: "Mr. Danese", color: "#800000", y: 500 }
     ];
 
-    // Create and add each word as a separate entity, with bars underneath
+    // Create and add each word as a separate entity, with thinner bars underneath
     lines.forEach(function(line, index) {
         var words = line.text.split(' ');  // Split the line into individual words
         var startX = 600 - (words.length * 75); // Adjust starting x position to reduce spacing
 
-        // Create and add a bar for this line
-        var bar = createBar(600, line.y + 60, 1000, 5); // Wide thin black bar under the words
+        // Create and add a thinner bar for this line
+        var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
         Composite.add(engine.world, bar);
 
         // Create and add each word with reduced spacing
