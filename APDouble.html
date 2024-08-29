@@ -27,7 +27,8 @@
         Bodies = Matter.Bodies,
         Composite = Matter.Composite,
         Mouse = Matter.Mouse,
-        MouseConstraint = Matter.MouseConstraint;
+        MouseConstraint = Matter.MouseConstraint,
+        Body = Matter.Body;
 
     // Create an engine
     var engine = Engine.create();
@@ -37,8 +38,8 @@
         element: document.body,
         engine: engine,
         options: {
-            width: 1200,
-            height: 1000,
+            width: 800,
+            height: 800,
             wireframes: false,
             background: '#ffffff'
         }
@@ -55,19 +56,19 @@
     function createBar(x, y, width, height) {
         return Bodies.rectangle(x, y, width, height, {
             isStatic: true,
-            render: { fillStyle: '#000000' }  // Black color
+            render: { fillStyle: '#800000' }
         });
     }
 
-    // Function to create a text body for each line of text
-    function createLine(lineText, x, y, color) {
+    // Function to create a text body for each letter
+    function createLetter(letter, x, y, color) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
-        var size = 48;  // Font size
+        var size = 32;  // Font size
         var family = "Arial, sans-serif";
         context.font = "bold " + size + "px " + family;
 
-        var textWidth = context.measureText(lineText).width;
+        var textWidth = context.measureText(letter).width;
         var textHeight = size;
 
         var text = Bodies.rectangle(x, y, textWidth, textHeight, {
@@ -85,57 +86,8 @@
 
         // Add custom label to the text body
         text.render.text = {
-            content: lineText,
-            color: color,
-            size: size,
-            family: family
-        };
-
-        // Update the texture of the text
-        Matter.Events.on(engine, "afterUpdate", function() {
-            text.render.sprite.texture = createTextTexture(text.render.text.content, text.render.text.color, text.render.text.size, text.render.text.family);
-        });
-
-        // Resize the text body to match the size of the text texture
-        Matter.Body.setVertices(text, [
-            { x: -textWidth / 2, y: -textHeight / 2 },
-            { x: textWidth / 2, y: -textHeight / 2 },
-            { x: textWidth / 2, y: textHeight / 2 },
-            { x: -textWidth / 2, y: textHeight / 2 }
-        ]);
-
-        return text;
-    }
-
-    // Function to create individual letters with random colors
-    function createLetter(letter, x, y) {
-        var canvas = document.createElement("canvas");
-        var context = canvas.getContext("2d");
-        var size = 48;  // Font size
-        var family = "Arial, sans-serif";
-        context.font = "bold " + size + "px " + family;
-
-        var textWidth = context.measureText(letter).width;
-        var textHeight = size;
-
-        var randomColor = getRandomColor();
-        var text = Bodies.rectangle(x, y, textWidth, textHeight, {
-            isStatic: false,
-            restitution: 0.5,  // Bounciness
-            render: {
-                sprite: {
-                    texture: '',
-                    xScale: 1,
-                    yScale: 1
-                },
-                fillStyle: randomColor
-            }
-        });
-
-        // Add custom label to the text body
-        text.render.text = {
             content: letter,
-            color: randomColor,
+            color: color,
             size: size,
             family: family
         };
@@ -170,54 +122,36 @@
         return canvas.toDataURL("image/png");
     }
 
-    // Function to generate a random color
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
     // Define text lines and positions
     var lines = [
         { text: "Welcome to", color: "#800000", y: 100 },
         { text: "AP Physics C: Mechanics", color: "#00AA00", y: 200 },
         { text: "&", color: "#800000", y: 300 },
         { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 400 },
-        { text: "2024-2025", color: "#800000", y: 500 }
+        { text: "2024-2025", color: "#800000", y: 500 },
+        { text: "Mr. Danese", color: "#800000", y: 600 }
     ];
 
-    // Create and add each line of text and bars
+    // Create and add each line's letters and bars
     lines.forEach(function(line, index) {
-        var startX = 600; // Center the text line
-        var bar = createBar(600, line.y + 60, 1000, 5); // Wide thin black bar under the text line
+        var startX = 400 - (line.text.length * 16); // Center the text line
+        var bar = createBar(400, line.y + 50, 600, 10); // Bar under the text line
         Composite.add(engine.world, bar);
 
-        var lineBody = createLine(line.text, startX, line.y, line.color);
-        Composite.add(engine.world, lineBody);
+        line.text.split('').forEach(function(letter, i) {
+            var letterBody = createLetter(letter, startX + i * 32, line.y, line.color);
+            Composite.add(engine.world, letterBody);
+        });
     });
 
-    // Create and add the "Mr. Danese" text, each letter as a separate entity
-    var name = "Mr. Danese".split('');
-    var nameStartX = 600 - (name.length * 16);
-    var nameBar = createBar(600, 750, 1000, 5); // Bar under the name
-    Composite.add(engine.world, nameBar);
-
-    name.forEach(function(letter, i) {
-        var letterBody = createLetter(letter, nameStartX + i * 32, 700);
-        Composite.add(engine.world, letterBody);
-    });
-
-    // Add mouse control to drag lines and letters
+    // Add mouse control to drag letters
     var mouse = Mouse.create(render.canvas);
     var mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
         constraint: {
             stiffness: 0.2,
             render: {
-                visible: true
+                visible: false
             }
         }
     });
@@ -229,7 +163,7 @@
     // Fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: 1200, y: 1000 }
+        max: { x: 800, y: 800 }
     });
 </script>
 
