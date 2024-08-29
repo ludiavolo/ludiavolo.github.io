@@ -83,7 +83,7 @@
 
         var text = Bodies.rectangle(x, y, textWidth - padding * 2, textHeight - padding * 2, {
             isStatic: false,
-            restitution: 0.5,  // Bounciness
+            restitution: 0.8,  // Bounciness
             render: {
                 sprite: {
                     texture: texture,
@@ -122,6 +122,11 @@
         var wordSpacing = 140;  // Set uniform spacing between words
         var totalWidth = words.reduce((total, word) => total + wordSpacing, 0) - wordSpacing; // Calculate total width
         var startX = 600 - (totalWidth / 2); // Center the text
+
+        // Adjust line 4 slightly to the left
+        if (line.text === "AP Physics C: Electricity and Magnetism!") {
+            startX -= 50;  // Move line 4 slightly to the left
+        }
 
         // Create and add a thinner bar for this line
         var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
