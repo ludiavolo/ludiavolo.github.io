@@ -124,6 +124,9 @@
         var startX = 600 - (totalWidth / 2); // Center the text
 
         // Adjust line 4 slightly to the left
+        if (line.text === "Welcome to") {
+            startX += 10;  // Move line 4 slightly to the left
+        }
         if (line.text === "AP Physics C: Electricity and Magnetism!") {
             startX -= 70;  // Move line 4 slightly to the left
         }
@@ -133,7 +136,7 @@
         }
 
          if (line.text === "Mr. Danese") {
-            startX -= 20;  // Move line 5 slightly to the left
+            startX -= 25;  // Move line 5 slightly to the left
         }
 
         // Create and add a thinner bar for this line
