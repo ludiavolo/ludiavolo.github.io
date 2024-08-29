@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matter.js Falling Text with Balls</title>
+    <title>Matter.js Falling Text with Bars</title>
     <style>
         body {
             margin: 0;
@@ -52,9 +52,9 @@
     var runner = Runner.create();
     Runner.run(runner, engine);
 
-    // Function to create a ball
-    function createBall(x, y, radius) {
-        return Bodies.circle(x, y, radius, {
+    // Function to create a bar
+    function createBar(x, y, width, height) {
+        return Bodies.rectangle(x, y, width, height, {
             isStatic: true,
             render: { fillStyle: '#800000' }
         });
@@ -132,11 +132,11 @@
         { text: "Mr. Danese", color: "#800000", y: 600 }
     ];
 
-    // Create and add each line's letters and balls
+    // Create and add each line's letters and bars
     lines.forEach(function(line, index) {
         var startX = 400 - (line.text.length * 16); // Center the text line
-        var ball = createBall(400, line.y + 50, 100); // Ball under the text line
-        Composite.add(engine.world, ball);
+        var bar = createBar(400, line.y + 50, 600, 10); // Bar under the text line
+        Composite.add(engine.world, bar);
 
         line.text.split('').forEach(function(letter, i) {
             var letterBody = createLetter(letter, startX + i * 32, line.y, line.color);
