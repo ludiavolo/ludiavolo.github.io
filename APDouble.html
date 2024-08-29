@@ -106,47 +106,29 @@
         { text: "Mr. Danese", color: "#800000", y: 620 }
     ];
 
-    // Function to position words with adjusted spacing
-    function positionWords(words, startX, lineY, color, spacingAdjustments) {
+    // Function to position words with uniform spacing
+    function positionWords(words, startX, lineY, color, wordSpacing) {
         var xOffset = startX;
-        words.forEach(function(word, i) {
-            // Adjust spacing based on specific words
-            var wordSpacing = spacingAdjustments.default || 140;
-
-            if (word === "AP" && spacingAdjustments.apPhysics) {
-                wordSpacing = spacingAdjustments.apPhysics;
-            } else if (i < words.length - 1 && spacingAdjustments.increase) {
-                wordSpacing = spacingAdjustments.increase;
-            }
-
+        words.forEach(function(word) {
             var wordBody = createWord(word, xOffset, lineY, color);
             Composite.add(engine.world, wordBody);
             xOffset += wordSpacing;
         });
     }
 
-    // Create and add each line of words with appropriate spacing
+    // Create and add each line of words with uniform spacing
     lines.forEach(function(line, index) {
         var words = line.text.split(' ');  // Split the line into individual words
-
-        // Spacing adjustments per line
-        var spacingAdjustments = {};
-        if (line.text === "AP Physics C: Mechanics") {
-            spacingAdjustments.apPhysics = 120; // Reduced spacing between "AP" and "Physics"
-        } else if (line.text === "AP Physics C: Electricity and Magnetism!") {
-            spacingAdjustments.increase = 160; // Increased spacing on the fourth line
-        } else {
-            spacingAdjustments.default = 140;
-        }
-
-        var startX = line.text === "Welcome to" ? 600 : 600 - (words.length * 60); // Adjust startX for "Welcome to"
+        var wordSpacing = 140;  // Set uniform spacing between words
+        var totalWidth = words.reduce((total, word) => total + wordSpacing, 0) - wordSpacing; // Calculate total width
+        var startX = 600 - (totalWidth / 2); // Center the text
 
         // Create and add a thinner bar for this line
         var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
         Composite.add(engine.world, bar);
 
-        // Position words with custom spacing
-        positionWords(words, startX, line.y, line.color, spacingAdjustments);
+        // Position words with uniform spacing
+        positionWords(words, startX, line.y, line.color, wordSpacing);
     });
 
     // Add mouse control to drag words
