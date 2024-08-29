@@ -106,7 +106,23 @@
         { text: "Mr. Danese", color: "#800000", y: 510 }
     ];
 
-    // Create and add each word as a separate entity, with thinner bars underneath
+    // Function to position words with reduced spacing between specific pairs
+    function positionWords(words, startX, lineY, color) {
+        var xOffset = startX;
+        words.forEach(function(word, i) {
+            // Reduce spacing between "AP" and "Physics" and between "Physics" and "C"
+            var wordSpacing = 150;
+            if (word === "AP" || word === "Physics" && (words[i + 1] === "C" || words[i + 1] === "Electricity")) {
+                wordSpacing = 100;  // Reduced spacing
+            }
+
+            var wordBody = createWord(word, xOffset, lineY, color);
+            Composite.add(engine.world, wordBody);
+            xOffset += wordSpacing;
+        });
+    }
+
+    // Create and add each line of words with appropriate spacing
     lines.forEach(function(line, index) {
         var words = line.text.split(' ');  // Split the line into individual words
         var startX = 600 - (words.length * 75); // Adjust starting x position to reduce spacing
@@ -115,11 +131,8 @@
         var bar = createBar(600, line.y + 60, 1000, 3); // Thinner black bar under the words
         Composite.add(engine.world, bar);
 
-        // Create and add each word with reduced spacing
-        words.forEach(function(word, i) {
-            var wordBody = createWord(word, startX + i * 150, line.y, line.color);
-            Composite.add(engine.world, wordBody);
-        });
+        // Position words with reduced spacing between specific pairs
+        positionWords(words, startX, line.y, line.color);
     });
 
     // Add mouse control to drag words
