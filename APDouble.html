@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matter.js Falling Words and Letters with Bars</title>
+    <title>Matter.js Falling Text with Bars</title>
     <style>
         body {
             margin: 0;
@@ -59,15 +59,15 @@
         });
     }
 
-    // Function to create a text body for each word
-    function createWord(word, x, y, color) {
+    // Function to create a text body for each line of text
+    function createLine(lineText, x, y, color) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
         var size = 48;  // Font size
         var family = "Arial, sans-serif";
         context.font = "bold " + size + "px " + family;
 
-        var textWidth = context.measureText(word).width;
+        var textWidth = context.measureText(lineText).width;
         var textHeight = size;
 
         var text = Bodies.rectangle(x, y, textWidth, textHeight, {
@@ -85,62 +85,13 @@
 
         // Add custom label to the text body
         text.render.text = {
-            content: word,
+            content: lineText,
             color: color,
             size: size,
             family: family
         };
 
-        // Update the texture of the word
-        Matter.Events.on(engine, "afterUpdate", function() {
-            text.render.sprite.texture = createTextTexture(text.render.text.content, text.render.text.color, text.render.text.size, text.render.text.family);
-        });
-
-        // Resize the text body to match the size of the text texture
-        Matter.Body.setVertices(text, [
-            { x: -textWidth / 2, y: -textHeight / 2 },
-            { x: textWidth / 2, y: -textHeight / 2 },
-            { x: textWidth / 2, y: textHeight / 2 },
-            { x: -textWidth / 2, y: textHeight / 2 }
-        ]);
-
-        return text;
-    }
-
-    // Function to create individual letters with random colors
-    function createLetter(letter, x, y) {
-        var canvas = document.createElement("canvas");
-        var context = canvas.getContext("2d");
-        var size = 48;  // Font size
-        var family = "Arial, sans-serif";
-        context.font = "bold " + size + "px " + family;
-
-        var textWidth = context.measureText(letter).width;
-        var textHeight = size;
-
-        var randomColor = getRandomColor();
-        var text = Bodies.rectangle(x, y, textWidth, textHeight, {
-            isStatic: false,
-            restitution: 0.5,  // Bounciness
-            render: {
-                sprite: {
-                    texture: '',
-                    xScale: 1,
-                    yScale: 1
-                },
-                fillStyle: randomColor
-            }
-        });
-
-        // Add custom label to the text body
-        text.render.text = {
-            content: letter,
-            color: randomColor,
-            size: size,
-            family: family
-        };
-
-        // Update the texture of the letter
+        // Update the texture of the text
         Matter.Events.on(engine, "afterUpdate", function() {
             text.render.sprite.texture = createTextTexture(text.render.text.content, text.render.text.color, text.render.text.size, text.render.text.family);
         });
@@ -170,16 +121,6 @@
         return canvas.toDataURL("image/png");
     }
 
-    // Function to generate a random color
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
     // Define text lines and positions
     var lines = [
         { text: "Welcome to", color: "#800000", y: 100 },
@@ -189,17 +130,14 @@
         { text: "2024-2025", color: "#800000", y: 500 }
     ];
 
-    // Create and add each line's words and bars
+    // Create and add each line of text and bars
     lines.forEach(function(line, index) {
-        var words = line.text.split(' ');  // Split the line into words
-        var startX = 600 - (words.length * 150); // Adjusted starting x position
-        var bar = createBar(600, line.y + 60, 1000, 5); // Wide thin black bar under the words
+        var startX = 600; // Center the text line
+        var bar = createBar(600, line.y + 60, 1000, 5); // Wide thin black bar under the text line
         Composite.add(engine.world, bar);
 
-        words.forEach(function(word, i) {
-            var wordBody = createWord(word, startX + i * 300, line.y, line.color);
-            Composite.add(engine.world, wordBody);
-        });
+        var lineBody = createLine(line.text, startX, line.y, line.color);
+        Composite.add(engine.world, lineBody);
     });
 
     // Create and add the "Mr. Danese" text, each letter as a separate entity
@@ -213,7 +151,7 @@
         Composite.add(engine.world, letterBody);
     });
 
-    // Add mouse control to drag words and letters
+    // Add mouse control to drag lines and letters
     var mouse = Mouse.create(render.canvas);
     var mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
