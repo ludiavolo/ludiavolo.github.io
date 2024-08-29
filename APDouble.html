@@ -183,10 +183,10 @@
     // Define text lines and positions
     var lines = [
         { text: "Welcome to", color: "#800000", y: 100 },
-        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 250 },
-        { text: "&", color: "#800000", y: 400 },
-        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 550 },
-        { text: "2024-2025", color: "#800000", y: 700 }
+        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 200 },
+        { text: "&", color: "#800000", y: 300 },
+        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 400 },
+        { text: "2024-2025", color: "#800000", y: 500 }
     ];
 
     // Create and add each line's words and bars
@@ -205,11 +205,11 @@
     // Create and add the "Mr. Danese" text, each letter as a separate entity
     var name = "Mr. Danese".split('');
     var nameStartX = 600 - (name.length * 16);
-    var nameBar = createBar(600, 950, 1000, 5); // Bar under the name
+    var nameBar = createBar(600, 750, 1000, 5); // Bar under the name
     Composite.add(engine.world, nameBar);
 
     name.forEach(function(letter, i) {
-        var letterBody = createLetter(letter, nameStartX + i * 32, 900);
+        var letterBody = createLetter(letter, nameStartX + i * 32, 700);
         Composite.add(engine.world, letterBody);
     });
 
