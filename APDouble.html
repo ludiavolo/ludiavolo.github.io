@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matter.js Falling Text with Bars</title>
+    <title>Matter.js Falling Words with Bars</title>
     <style>
         body {
             margin: 0;
@@ -27,8 +27,7 @@
         Bodies = Matter.Bodies,
         Composite = Matter.Composite,
         Mouse = Matter.Mouse,
-        MouseConstraint = Matter.MouseConstraint,
-        Body = Matter.Body;
+        MouseConstraint = Matter.MouseConstraint;
 
     // Create an engine
     var engine = Engine.create();
@@ -38,8 +37,8 @@
         element: document.body,
         engine: engine,
         options: {
-            width: 800,
-            height: 800,
+            width: 1200,
+            height: 1000,
             wireframes: false,
             background: '#ffffff'
         }
@@ -56,19 +55,19 @@
     function createBar(x, y, width, height) {
         return Bodies.rectangle(x, y, width, height, {
             isStatic: true,
-            render: { fillStyle: '#800000' }
+            render: { fillStyle: '#000000' }  // Black color
         });
     }
 
-    // Function to create a text body for each letter
-    function createLetter(letter, x, y, color) {
+    // Function to create a text body for each word
+    function createWord(word, x, y, color) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
-        var size = 32;  // Font size
+        var size = 48;  // Font size
         var family = "Arial, sans-serif";
         context.font = "bold " + size + "px " + family;
 
-        var textWidth = context.measureText(letter).width;
+        var textWidth = context.measureText(word).width;
         var textHeight = size;
 
         var text = Bodies.rectangle(x, y, textWidth, textHeight, {
@@ -86,13 +85,13 @@
 
         // Add custom label to the text body
         text.render.text = {
-            content: letter,
+            content: word,
             color: color,
             size: size,
             family: family
         };
 
-        // Update the texture of the letter
+        // Update the texture of the word
         Matter.Events.on(engine, "afterUpdate", function() {
             text.render.sprite.texture = createTextTexture(text.render.text.content, text.render.text.color, text.render.text.size, text.render.text.family);
         });
@@ -125,26 +124,24 @@
     // Define text lines and positions
     var lines = [
         { text: "Welcome to", color: "#800000", y: 100 },
-        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 200 },
-        { text: "&", color: "#800000", y: 300 },
-        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 400 },
-        { text: "2024-2025", color: "#800000", y: 500 },
-        { text: "Mr. Danese", color: "#800000", y: 600 }
+        { text: "AP Physics C: Mechanics", color: "#00AA00", y: 250 },
+        { text: "&", color: "#800000", y: 400 },
+        { text: "AP Physics C: Electricity and Magnetism!", color: "#0088FF", y: 550 },
+        { text: "2024-2025", color: "#800000", y: 700 },
+        { text: "Mr. Danese", color: "#800000", y: 850 }
     ];
 
-    // Create and add each line's letters and bars
+    // Create and add each line's words and bars
     lines.forEach(function(line, index) {
-        var startX = 400 - (line.text.length * 16); // Center the text line
-        var bar = createBar(400, line.y + 50, 600, 10); // Bar under the text line
+        var startX = 600; // Center the words
+        var bar = createBar(600, line.y + 60, 1000, 5); // Wide thin black bar under the words
         Composite.add(engine.world, bar);
 
-        line.text.split('').forEach(function(letter, i) {
-            var letterBody = createLetter(letter, startX + i * 32, line.y, line.color);
-            Composite.add(engine.world, letterBody);
-        });
+        var wordBody = createWord(line.text, startX, line.y, line.color);
+        Composite.add(engine.world, wordBody);
     });
 
-    // Add mouse control to drag letters
+    // Add mouse control to drag words
     var mouse = Mouse.create(render.canvas);
     var mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
@@ -163,7 +160,7 @@
     // Fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: 800, y: 800 }
+        max: { x: 1200, y: 1000 }
     });
 </script>
 
